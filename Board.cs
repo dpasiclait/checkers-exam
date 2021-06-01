@@ -28,13 +28,15 @@ namespace Checkers
             for (int row = 0; row < 8; row++)
                 for(int column = 0; column < 8; column++)
                 {
-                    bool shouldSlotBeRed = (row + column) % 2 == 1;
+                    // when adding the row to the column the % shows red slots will always be odd numbers
+                    bool shouldSlotBeRed = (row + column) % 2 == 1; 
 
                     char slotColor = shouldSlotBeRed ? 'R' : 'W';
                     
                     board[row, column] = new Slot(slotColor, row, column);
                 }
         }
+
         private void PlacePieces()
         {
             PlaceWhitePieces();
@@ -55,7 +57,7 @@ namespace Checkers
 
         private string GetSlotNumberIdString(int id)
         {
-            return id < 10 ? "0" + id: id.ToString();
+            return (id < 10) ? "0" + id: id.ToString();
         }
 
         private void PlaceBlackPieces()
@@ -141,7 +143,7 @@ namespace Checkers
 
             possibleMoves += TryJumping(board[row, column].Piece[0], row, column, "");
 
-            return possibleMoves == "NO JUMPS;" ? "NO MOVES" : possibleMoves;
+            return (possibleMoves == "NO JUMPS;" || possibleMoves == "") ? "NO MOVES" : possibleMoves;
         }
 
         private static bool IsPositionOutOfBounds(int row, int column)
@@ -154,7 +156,7 @@ namespace Checkers
             if (IsPositionOutOfBounds(row, column))
                 return "";
 
-            return board[row, column].Piece == "" ? "Move Left;" : "";
+            return (board[row, column].Piece == "") ? "Move Left;" : "";
         }
 
         private string TryMovingRight(int row, int column)
@@ -162,7 +164,7 @@ namespace Checkers
             if (IsPositionOutOfBounds(row, column))
                 return "";
 
-            return board[row, column].Piece == "" ? "Move Right;" : "";
+            return (board[row, column].Piece == "") ? "Move Right;" : "";
         }
 
         private string TryJumping(char pieceColor, int row, int column, string initalRoute)
@@ -239,7 +241,7 @@ namespace Checkers
                 }
             }
 
-            return possibleJumps == "" ? "" : possibleJumps;
+            return (possibleJumps == "") ? "" : possibleJumps;
         }
 
         public string WhatPossibleJumpsCanBeMadeByGivenPiece(string pieceName)
@@ -263,7 +265,21 @@ namespace Checkers
 
             string possibleJumps = TryJumping(board[row, column].Piece[0], row, column, "");
 
-            return possibleJumps == "" ? "NO JUMPS;" : possibleJumps;
+            return (possibleJumps == "") ? "NO JUMPS;" : possibleJumps;
+        }
+
+        public string WhichPiecesOfAColorCanBeMoved(char color)
+        {
+            string pieces = "";
+            foreach(string key in piecePositionsCheatSheet.Keys)
+                if (key.Contains(color))
+                {
+                    string possiblemoves = WhatPossibleActionsCanBeTakenByGivenPiece(key);
+                    if (possiblemoves != "NO MOVES")
+                        pieces += key + " at (" + piecePositionsCheatSheet[key] + ");";
+                }
+
+            return (pieces == "") ? "No moves can be made;" : pieces;
         }
 
         public void MovePiece(string pieceName, int newRow, int newColumn)
