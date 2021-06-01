@@ -11,25 +11,25 @@ namespace Checkers
             Board gameboard = new Board();
             gameboard.DrawBoard();
 
-            //Console.WriteLine("W01: " + gameboard.WhatPossibleActionsCanBeTakenByGivenPiece("W01"));
-            //Console.WriteLine("B01: " + gameboard.WhatPossibleActionsCanBeTakenByGivenPiece("b12"));
-            //Console.WriteLine("301: " + gameboard.WhatPossibleActionsCanBeTakenByGivenPiece("301"));
-            //Console.WriteLine("W12: " + gameboard.WhatPossibleActionsCanBeTakenByGivenPiece("W12"));
-            //Console.WriteLine("B01: " + gameboard.WhatPossibleActionsCanBeTakenByGivenPiece("b01"));
-            //Console.WriteLine("W11: " + gameboard.WhatPossibleActionsCanBeTakenByGivenPiece("W11"));
-            //Console.WriteLine("B03: " + gameboard.WhatPossibleActionsCanBeTakenByGivenPiece("b03"));
+            //Console.WriteLine("MW01: " + gameboard.WhatPossibleActionsCanBeTakenByGivenPiece("MW01"));
+            //Console.WriteLine("MB01: " + gameboard.WhatPossibleActionsCanBeTakenByGivenPiece("Mb12"));
+            //Console.WriteLine("M301: " + gameboard.WhatPossibleActionsCanBeTakenByGivenPiece("301"));
+            //Console.WriteLine("MW12: " + gameboard.WhatPossibleActionsCanBeTakenByGivenPiece("MW12"));
+            //Console.WriteLine("MB01: " + gameboard.WhatPossibleActionsCanBeTakenByGivenPiece("Mb01"));
+            //Console.WriteLine("MW11: " + gameboard.WhatPossibleActionsCanBeTakenByGivenPiece("MW11"));
+            //Console.WriteLine("MB03: " + gameboard.WhatPossibleActionsCanBeTakenByGivenPiece("Mb03"));
 
-            gameboard.MovePiece("W09", 3, 2);
-            gameboard.MovePiece("B03", 4, 3);
-            gameboard.MovePiece("B12", 4, 7);
-            gameboard.MovePiece("B10", 3, 0);
+            gameboard.MovePiece("MW09", 3, 2);
+            gameboard.MovePiece("MB03", 4, 3);
+            gameboard.MovePiece("MB12", 4, 7);
+            gameboard.MovePiece("MB10", 3, 0);
 
-            //Console.WriteLine("W09 can: " + gameboard.WhatPossibleActionsCanBeTakenByGivenPiece("W09"));
-            //Console.WriteLine("B03 can: " + gameboard.WhatPossibleActionsCanBeTakenByGivenPiece("B03"));
+            //Console.WriteLine("MW09 can: " + gameboard.WhatPossibleActionsCanBeTakenByGivenPiece("MW09"));
+            //Console.WriteLine("MB03 can: " + gameboard.WhatPossibleActionsCanBeTakenByGivenPiece("MB03"));
 
-            //Console.WriteLine("W09 has: " + gameboard.WhatPossibleJumpsCanBeMadeByGivenPiece("W09"));
-            //Console.WriteLine("B03 has: " + gameboard.WhatPossibleJumpsCanBeMadeByGivenPiece("B03"));
-            //Console.WriteLine("B12 has: " + gameboard.WhatPossibleJumpsCanBeMadeByGivenPiece("B12"));
+            //Console.WriteLine("MW09 has: " + gameboard.WhatPossibleJumpsCanBeMadeByGivenPiece("MW09"));
+            //Console.WriteLine("MB03 has: " + gameboard.WhatPossibleJumpsCanBeMadeByGivenPiece("MB03"));
+            //Console.WriteLine("MB12 has: " + gameboard.WhatPossibleJumpsCanBeMadeByGivenPiece("MB12"));
 
             Console.WriteLine("White pieces that can move: \n" + gameboard.WhichPiecesOfAColorCanBeMoved('W'));
             Console.WriteLine("\nBlack pieces that can move: \n" + gameboard.WhichPiecesOfAColorCanBeMoved('B'));

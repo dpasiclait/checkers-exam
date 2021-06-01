@@ -8,19 +8,19 @@ namespace Checkers
 {
     class Slot
     {
-        private char color;
+        private SlotColor color;
         private int row;
         private int column;
         private string piece = "";
 
-        public Slot(char color, int row, int column)
+        public Slot(SlotColor color, int row, int column)
         {
             this.color = color;
             this.row = row;
             this.column = column;
         }
 
-        public char Color { get => color; set => color = value; }
+        public SlotColor Color { get => color; set => color = value; }
         public int Row { get => row; set => row = value; }
         public int Column { get => column; set => column = value; }
         public string Piece { get => piece; set => piece = value; }

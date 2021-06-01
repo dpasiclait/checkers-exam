@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Checkers
 {
@@ -29,9 +27,9 @@ namespace Checkers
                 for(int column = 0; column < 8; column++)
                 {
                     // when adding the row to the column the % shows red slots will always be odd numbers
-                    bool shouldSlotBeRed = (row + column) % 2 == 1; 
+                    bool shouldSlotBeRed = (row + column) % 2 == 1;
 
-                    char slotColor = shouldSlotBeRed ? 'R' : 'W';
+                    SlotColor slotColor = shouldSlotBeRed ? SlotColor.Red : SlotColor.White;
                     
                     board[row, column] = new Slot(slotColor, row, column);
                 }
@@ -48,9 +46,9 @@ namespace Checkers
             int count = 1;
             for (int row = 0; row < 3; row++)
                 for (int column = 0; column < 8; column++)
-                    if (board[row, column].Color == 'R')
+                    if (board[row, column].Color == SlotColor.Red)
                     {
-                        board[row, column].Piece = "W" + GetSlotNumberIdString(count++);
+                        board[row, column].Piece = "MW" + GetSlotNumberIdString(count++);
                         piecePositionsCheatSheet.Add(board[row, column].Piece, row + "," + column);
                     }
         }
@@ -65,9 +63,9 @@ namespace Checkers
             int count = 1;
             for (int row = 5; row < 8; row++)
                 for (int column = 0; column < 8; column++)
-                    if (board[row, column].Color == 'R')
+                    if (board[row, column].Color == SlotColor.Red)
                     {
-                        board[row, column].Piece = "B" + GetSlotNumberIdString(count++);
+                        board[row, column].Piece = "MB" + GetSlotNumberIdString(count++);
                         piecePositionsCheatSheet.Add(board[row, column].Piece, row + "," + column);
                     }
         }
@@ -84,7 +82,7 @@ namespace Checkers
 
             for (int column = 0; column < 8; column++)
             {
-                Console.Write("    " + column + "   ");
+                Console.Write("     " + column + "   ");
             }
 
             Console.WriteLine("\n");
@@ -94,7 +92,7 @@ namespace Checkers
         {
             for (int row = 0; row < 8; row++)
             {
-                Console.WriteLine("\t-----------------------------------------------------------------");
+                Console.WriteLine("\t-------------------------------------------------------------------------");
                 Console.Write(row + "\t|  ");
 
                 for (int column = 0; column < 8; column++)
@@ -102,10 +100,10 @@ namespace Checkers
                     if (board[row, column].Piece != "")
                         Console.Write(board[row, column].Piece + "  |  ");
                     else
-                        Console.Write("---  |  ");
+                        Console.Write("----  |  ");
                 }
 
-                Console.WriteLine("\n\t-----------------------------------------------------------------");
+                Console.WriteLine("\n\t-------------------------------------------------------------------------");
             }
         }
 
