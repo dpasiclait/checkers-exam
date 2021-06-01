@@ -11,14 +11,13 @@ namespace Checkers
         private char color;
         private int row;
         private int column;
-        private string piece = null;
+        private string piece = "";
 
-        public Slot(char color, int row, int column, string piece)
+        public Slot(char color, int row, int column)
         {
             this.color = color;
             this.row = row;
             this.column = column;
-            this.piece = piece;
         }
 
         public char Color { get => color; set => color = value; }

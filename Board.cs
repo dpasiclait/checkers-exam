@@ -10,6 +10,8 @@ namespace Checkers
     {
         private Slot[,] board = new Slot[8,8];
 
+        private Dictionary<string, string> piecePositionsCheatSheet = new Dictionary<string, string>();
+
         public Board()
         {
             SetupBoard();
@@ -17,8 +19,8 @@ namespace Checkers
 
         private void SetupBoard()
         {
-            // TODO: setup pieces
             InitializeSlots();
+            PlacePieces();
         }
 
         private void InitializeSlots()
@@ -30,8 +32,42 @@ namespace Checkers
 
                     char slotColor = shouldSlotBeRed ? 'R' : 'W';
                     
-                    board[row, column] = new Slot(slotColor, row, column, null);
+                    board[row, column] = new Slot(slotColor, row, column);
                 }
+        }
+        private void PlacePieces()
+        {
+            PlaceWhitePieces();
+            PlaceBlackPieces();
+        }
+
+        private void PlaceWhitePieces()
+        {
+            int count = 1;
+            for (int row = 0; row < 3; row++)
+                for (int column = 0; column < 8; column++)
+                    if (board[row, column].Color == 'R')
+                    {
+                        board[row, column].Piece = "W" + GetSlotNumberIdString(count++);
+                        piecePositionsCheatSheet.Add(board[row, column].Piece, row + "," + column);
+                    }
+        }
+
+        private string GetSlotNumberIdString(int id)
+        {
+            return id < 10 ? "0" + id: id.ToString();
+        }
+
+        private void PlaceBlackPieces()
+        {
+            int count = 1;
+            for (int row = 5; row < 8; row++)
+                for (int column = 0; column < 8; column++)
+                    if (board[row, column].Color == 'R')
+                    {
+                        board[row, column].Piece = "B" + GetSlotNumberIdString(count++);
+                        piecePositionsCheatSheet.Add(board[row, column].Piece, row + "," + column);
+                    }
         }
 
         public void DrawBoard()
@@ -39,13 +75,13 @@ namespace Checkers
             DrawColumnHeaderIndex();
             DrawSlots();
         }
-        private static void DrawColumnHeaderIndex()
+        private void DrawColumnHeaderIndex()
         {
             Console.Write("\t");
 
             for (int column = 0; column < 8; column++)
             {
-                Console.Write("   " + column + "  ");
+                Console.Write("    " + column + "   ");
             }
 
             Console.WriteLine("\n");
@@ -55,15 +91,18 @@ namespace Checkers
         {
             for (int row = 0; row < 8; row++)
             {
-                Console.WriteLine("\t-------------------------------------------------");
+                Console.WriteLine("\t-----------------------------------------------------------------");
                 Console.Write(row + "\t|  ");
 
                 for (int column = 0; column < 8; column++)
                 {
-                    Console.Write(board[row, column].Color + "  |  ");
+                    if (board[row, column].Piece != "")
+                        Console.Write(board[row, column].Piece + "  |  ");
+                    else
+                        Console.Write("---  |  ");
                 }
 
-                Console.WriteLine("\n\t-------------------------------------------------");
+                Console.WriteLine("\n\t-----------------------------------------------------------------");
             }
         }
 
