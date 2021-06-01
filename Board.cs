@@ -139,7 +139,7 @@ namespace Checkers
                 possibleMoves += TryMovingRight(row - 1, column + 1);
             }
 
-            possibleMoves += TryJumping(row, column);
+            possibleMoves += TryJumping(board[row, column].Piece[0], row, column, "");
 
             return possibleMoves == "NO JUMPS;" ? "NO MOVES" : possibleMoves;
         }
@@ -165,7 +165,7 @@ namespace Checkers
             return board[row, column].Piece == "" ? "Move Right;" : "";
         }
 
-        private string TryJumping(int row, int column)
+        private string TryJumping(char pieceColor, int row, int column, string initalRoute)
         {
             if (IsPositionOutOfBounds(row, column))
                 return "NO JUMPS;";
@@ -176,7 +176,7 @@ namespace Checkers
             bool isLetfSlotBehindEnemyOccupied;
             bool isRightSlotOccypiedByEnemy;
             bool isRightSlotBehindEnemyOccupied;
-            if (board[row, column].Piece.Contains("W"))
+            if (pieceColor == 'W')
             {
                 try
                 {
@@ -184,7 +184,8 @@ namespace Checkers
                     isLetfSlotBehindEnemyOccupied = board[row + 2, column - 2].Piece == "";
                     if (isLetfSlotOccypiedByEnemy && isLetfSlotBehindEnemyOccupied)
                     {
-                        possibleJumps += "Jump LEFT to (" + (row + 2) + "," + (column - 2) + ") THEN " + TryJumping(row + 2, column - 2);
+                        possibleJumps += "Jump to (" + (row + 2) + "," + (column - 2) + ");";
+                        possibleJumps += TryJumping(pieceColor, row + 2, column - 2, possibleJumps);
                     }
                 } catch (Exception)
                 {
@@ -197,7 +198,8 @@ namespace Checkers
                     isRightSlotBehindEnemyOccupied = board[row + 2, column + 2].Piece == "";
                     if (isRightSlotOccypiedByEnemy && isRightSlotBehindEnemyOccupied)
                     {
-                        possibleJumps += "Jump RIGHT to (" + (row + 2) + "," + (column + 2) + ") THEN " + TryJumping(row + 2, column + 2);
+                        possibleJumps += "Jump to (" + (row + 2) + "," + (column + 2) + ");";
+                        possibleJumps += TryJumping(pieceColor, row + 2, column + 2, possibleJumps);
                     }
                 } catch (Exception)
                 {
@@ -212,7 +214,8 @@ namespace Checkers
                     isLetfSlotBehindEnemyOccupied = board[row - 2, column - 2].Piece == "";
                     if (isLetfSlotOccypiedByEnemy && isLetfSlotBehindEnemyOccupied)
                     {
-                        possibleJumps += "Jump LEFT to (" + (row - 2) + "," + (column - 2) + ") THEN " + TryJumping(row - 2, column - 2);
+                        possibleJumps += "Jump to (" + (row - 2) + "," + (column - 2) + ");";
+                        possibleJumps += TryJumping(pieceColor, row - 2, column - 2, possibleJumps);
                     }
                 }
                 catch (Exception)
@@ -220,14 +223,14 @@ namespace Checkers
                     // we've gone out of bounds 
                 }
 
-
                 try
                 {
                     isRightSlotOccypiedByEnemy = board[row - 1, column + 1].Piece.Contains("W");
                     isRightSlotBehindEnemyOccupied = board[row - 2, column + 2].Piece == "";
                     if (isRightSlotOccypiedByEnemy && isRightSlotBehindEnemyOccupied)
                     {
-                        possibleJumps += "Jump RIGHT to (" + (row - 2) + "," + (column + 2) + ") THEN " + TryJumping(row - 2, column + 2);
+                        possibleJumps += "Jump to (" + (row - 2) + "," + (column + 2) + ");";
+                        possibleJumps += TryJumping(pieceColor, row - 2, column + 2, possibleJumps);
                     }
                 }
                 catch (Exception)
@@ -236,8 +239,28 @@ namespace Checkers
                 }
             }
 
+            return possibleJumps == "" ? "" : possibleJumps;
+        }
 
-            return possibleJumps == "" ? "NO JUMPS;" : possibleJumps + " END JUMP SEQUENCE;";
+        public void MovePiece(string pieceName, int newRow, int newColumn)
+        {
+            if (IsPositionOutOfBounds(newRow, newColumn))
+                return;
+
+            if (!piecePositionsCheatSheet.Keys.Contains<string>(pieceName.ToUpper()))
+                return;
+
+            string currentPiecePosition = piecePositionsCheatSheet[pieceName.ToUpper()];
+            int row = Int32.Parse(currentPiecePosition.Split(',')[0]);
+            int column = Int32.Parse(currentPiecePosition.Split(',')[1]);
+
+            board[newRow, newColumn].Piece = board[row, column].Piece;
+            board[row, column].Piece = "";
+
+            piecePositionsCheatSheet[pieceName.ToUpper()] = newRow + "," + newColumn;
+
+            Console.Clear();
+            DrawBoard();
         }
     }
 }
