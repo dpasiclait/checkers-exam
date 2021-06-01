@@ -242,6 +242,30 @@ namespace Checkers
             return possibleJumps == "" ? "" : possibleJumps;
         }
 
+        public string WhatPossibleJumpsCanBeMadeByGivenPiece(string pieceName)
+        {
+            if (!piecePositionsCheatSheet.Keys.Contains<string>(pieceName.ToUpper()))
+                return "Invalid piece";
+
+            string currentPiecePosition = piecePositionsCheatSheet[pieceName.ToUpper()];
+            int row = Int32.Parse(currentPiecePosition.Split(',')[0]);
+            int column = Int32.Parse(currentPiecePosition.Split(',')[1]);
+
+            string possibleJumps = PossibleJumpsFromCurrentPosition(row, column);
+
+            return possibleJumps;
+        }
+
+        private string PossibleJumpsFromCurrentPosition(int row, int column)
+        {
+            if (IsPositionOutOfBounds(row, column))
+                return "";
+
+            string possibleJumps = TryJumping(board[row, column].Piece[0], row, column, "");
+
+            return possibleJumps == "" ? "NO JUMPS;" : possibleJumps;
+        }
+
         public void MovePiece(string pieceName, int newRow, int newColumn)
         {
             if (IsPositionOutOfBounds(newRow, newColumn))

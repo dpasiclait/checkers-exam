@@ -23,8 +23,13 @@ namespace Checkers
             gameboard.MovePiece("B03", 4, 3);
             gameboard.MovePiece("B12", 4, 7);
             gameboard.MovePiece("B10", 3, 0);
+
             Console.WriteLine("W09 can: " + gameboard.WhatPossibleActionsCanBeTakenByGivenPiece("W09"));
             Console.WriteLine("B03 can: " + gameboard.WhatPossibleActionsCanBeTakenByGivenPiece("B03"));
+
+            Console.WriteLine("W09 has: " + gameboard.WhatPossibleJumpsCanBeMadeByGivenPiece("W09"));
+            Console.WriteLine("B03 has: " + gameboard.WhatPossibleJumpsCanBeMadeByGivenPiece("B03"));
+            Console.WriteLine("B12 has: " + gameboard.WhatPossibleJumpsCanBeMadeByGivenPiece("B12"));
 
             Console.WriteLine("Yolo!");
         }
