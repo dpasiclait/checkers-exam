@@ -1,0 +1,8 @@
+{
+  "runtimeOptions": {
+    "additionalProbingPaths": [
+      "C:\\Users\\Siclait\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\Siclait\\.nuget\\packages"
+    ]
+  }
+}
