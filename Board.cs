@@ -75,6 +75,7 @@ namespace Checkers
             DrawColumnHeaderIndex();
             DrawSlots();
         }
+
         private void DrawColumnHeaderIndex()
         {
             Console.Write("\t");
@@ -106,5 +107,137 @@ namespace Checkers
             }
         }
 
+        public string WhatPossibleActionsCanBeTakenByGivenPiece(string pieceName)
+        {
+            if (!piecePositionsCheatSheet.Keys.Contains<string>(pieceName.ToUpper()))
+                return "Invalid piece";
+
+            string currentPiecePosition = piecePositionsCheatSheet[pieceName.ToUpper()];
+            int row = Int32.Parse(currentPiecePosition.Split(',')[0]);
+            int column = Int32.Parse(currentPiecePosition.Split(',')[1]);
+
+            string possibleActions = PossibleMovesFromCurrentPosition(row, column);
+
+            return possibleActions;
+        }
+
+        private string PossibleMovesFromCurrentPosition(int row, int column)
+        {
+            if (IsPositionOutOfBounds(row, column))
+                return "";
+
+            string possibleMoves = "";
+
+            if (board[row, column].Piece.Contains("W"))
+            {
+                possibleMoves += TryMovingLeft(row + 1, column - 1);
+                possibleMoves += TryMovingRight(row + 1, column + 1);
+            }
+            else
+            {
+                possibleMoves += TryMovingLeft(row - 1, column - 1);
+                possibleMoves += TryMovingRight(row - 1, column + 1);
+            }
+
+            possibleMoves += TryJumping(row, column);
+
+            return possibleMoves == "NO JUMPS;" ? "NO MOVES" : possibleMoves;
+        }
+
+        private static bool IsPositionOutOfBounds(int row, int column)
+        {
+            return row < 0 || row > 7 || column < 0 || column > 7;
+        }
+
+        private string TryMovingLeft(int row, int column)
+        {
+            if (IsPositionOutOfBounds(row, column))
+                return "";
+
+            return board[row, column].Piece == "" ? "Move Left;" : "";
+        }
+
+        private string TryMovingRight(int row, int column)
+        {
+            if (IsPositionOutOfBounds(row, column))
+                return "";
+
+            return board[row, column].Piece == "" ? "Move Right;" : "";
+        }
+
+        private string TryJumping(int row, int column)
+        {
+            if (IsPositionOutOfBounds(row, column))
+                return "NO JUMPS;";
+
+            string possibleJumps = "";
+
+            bool isLetfSlotOccypiedByEnemy;
+            bool isLetfSlotBehindEnemyOccupied;
+            bool isRightSlotOccypiedByEnemy;
+            bool isRightSlotBehindEnemyOccupied;
+            if (board[row, column].Piece.Contains("W"))
+            {
+                try
+                {
+                    isLetfSlotOccypiedByEnemy = board[row + 1, column - 1].Piece.Contains("B");
+                    isLetfSlotBehindEnemyOccupied = board[row + 2, column - 2].Piece == "";
+                    if (isLetfSlotOccypiedByEnemy && isLetfSlotBehindEnemyOccupied)
+                    {
+                        possibleJumps += "Jump LEFT to (" + (row + 2) + "," + (column - 2) + ") THEN " + TryJumping(row + 2, column - 2);
+                    }
+                } catch (Exception)
+                {
+                   // we've gone out of bounds     
+                }
+
+                try
+                {
+                    isRightSlotOccypiedByEnemy = board[row + 1, column + 1].Piece.Contains("B");
+                    isRightSlotBehindEnemyOccupied = board[row + 2, column + 2].Piece == "";
+                    if (isRightSlotOccypiedByEnemy && isRightSlotBehindEnemyOccupied)
+                    {
+                        possibleJumps += "Jump RIGHT to (" + (row + 2) + "," + (column + 2) + ") THEN " + TryJumping(row + 2, column + 2);
+                    }
+                } catch (Exception)
+                {
+                    // we've gone out of bounds 
+                }
+            }
+            else
+            {
+                try
+                {
+                    isLetfSlotOccypiedByEnemy = board[row - 1, column - 1].Piece.Contains("W");
+                    isLetfSlotBehindEnemyOccupied = board[row - 2, column - 2].Piece == "";
+                    if (isLetfSlotOccypiedByEnemy && isLetfSlotBehindEnemyOccupied)
+                    {
+                        possibleJumps += "Jump LEFT to (" + (row - 2) + "," + (column - 2) + ") THEN " + TryJumping(row - 2, column - 2);
+                    }
+                }
+                catch (Exception)
+                {
+                    // we've gone out of bounds 
+                }
+
+
+                try
+                {
+                    isRightSlotOccypiedByEnemy = board[row - 1, column + 1].Piece.Contains("W");
+                    isRightSlotBehindEnemyOccupied = board[row - 2, column + 2].Piece == "";
+                    if (isRightSlotOccypiedByEnemy && isRightSlotBehindEnemyOccupied)
+                    {
+                        possibleJumps += "Jump RIGHT to (" + (row - 2) + "," + (column + 2) + ") THEN " + TryJumping(row - 2, column + 2);
+                    }
+                }
+                catch (Exception)
+                {
+                    // we've gone out of bounds 
+                }
+            }
+
+
+            return possibleJumps == "" ? "NO JUMPS;" : possibleJumps + " END JUMP SEQUENCE;";
+        }
     }
 }
