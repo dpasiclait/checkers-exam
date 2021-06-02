@@ -105,6 +105,11 @@ namespace Checkers
 
                 Console.WriteLine("\n\t-------------------------------------------------------------------------");
             }
+
+            //foreach(string key in piecePositionsCheatSheet.Keys)
+            //{
+            //    Console.WriteLine(key + " at position " + piecePositionsCheatSheet[key]);
+            //}
         }
 
         public string WhatPossibleActionsCanBeTakenByGivenPiece(string pieceName)
@@ -128,18 +133,37 @@ namespace Checkers
 
             string possibleMoves = "";
 
-            if (board[row, column].Piece.Contains("W"))
+            if (board[row, column].Piece.Contains("K") || board[row, column].Piece.Contains("W"))
             {
-                possibleMoves += TryMovingLeft(row + 1, column - 1);
-                possibleMoves += TryMovingRight(row + 1, column + 1);
-            }
-            else
-            {
-                possibleMoves += TryMovingLeft(row - 1, column - 1);
-                possibleMoves += TryMovingRight(row - 1, column + 1);
+                string move = TryMovingLeft(row + 1, column - 1);
+                move += (move != "") ? " One Row Down;": "";
+                possibleMoves += move;
+
+                move = TryMovingRight(row + 1, column + 1);
+                move += (move != "") ? " One Row Down;" : "";
+                possibleMoves += move;
             }
 
-            possibleMoves += TryJumping(board[row, column].Piece[0], row, column, "");
+            if (board[row, column].Piece.Contains("K") || board[row, column].Piece.Contains("B"))
+            {
+                string move = TryMovingLeft(row - 1, column - 1);
+                move += (move != "") ? " One Row Up;" : "";
+                possibleMoves +=  move;
+
+                move = TryMovingRight(row - 1, column + 1);
+                move += (move != "") ? " One Row Up;" : "";
+                possibleMoves +=  move;
+            }
+
+            char pieceRank = board[row, column].Piece[0];
+            char pieceColor = board[row, column].Piece[1];
+
+            if ( pieceRank == 'M')
+                possibleMoves += TryJumping(pieceColor, row, column, "");
+            //else
+            //{
+            //    continue;
+            //}
 
             return (possibleMoves == "NO JUMPS;" || possibleMoves == "") ? "NO MOVES" : possibleMoves;
         }
@@ -154,7 +178,7 @@ namespace Checkers
             if (IsPositionOutOfBounds(row, column))
                 return "";
 
-            return (board[row, column].Piece == "") ? "Move Left;" : "";
+            return (board[row, column].Piece == "") ? "Move Left" : "";
         }
 
         private string TryMovingRight(int row, int column)
@@ -162,7 +186,7 @@ namespace Checkers
             if (IsPositionOutOfBounds(row, column))
                 return "";
 
-            return (board[row, column].Piece == "") ? "Move Right;" : "";
+            return (board[row, column].Piece == "") ? "Move Right" : "";
         }
 
         private string TryJumping(char pieceColor, int row, int column, string initalRoute)
@@ -206,7 +230,8 @@ namespace Checkers
                     // we've gone out of bounds 
                 }
             }
-            else
+            
+            if(pieceColor == 'B')
             {
                 try
                 {
@@ -261,7 +286,8 @@ namespace Checkers
             if (IsPositionOutOfBounds(row, column))
                 return "";
 
-            string possibleJumps = TryJumping(board[row, column].Piece[0], row, column, "");
+            char pieceColor = board[row, column].Piece[1];
+            string possibleJumps = TryJumping(pieceColor, row, column, "");
 
             return (possibleJumps == "") ? "NO JUMPS;" : possibleJumps;
         }
@@ -278,6 +304,30 @@ namespace Checkers
                 }
 
             return (pieces == "") ? "No moves can be made;" : pieces;
+        }
+
+        public string WhatPossibleActionsCanBeTakenByGivenKingPiece(string pieceName)
+        {
+            if (!piecePositionsCheatSheet.Keys.Contains<string>(pieceName.ToUpper()))
+                return "Invalid piece";
+
+            string value = piecePositionsCheatSheet[pieceName];
+            piecePositionsCheatSheet.Remove(pieceName);
+            pieceName = "K" + pieceName.Substring(1);
+            piecePositionsCheatSheet.Add(pieceName, value);
+
+            if (!pieceName.ToUpper().Contains('K'))
+                return "This piece is not a King piece";
+
+            string currentPiecePosition = piecePositionsCheatSheet[pieceName.ToUpper()];
+            int row = Int32.Parse(currentPiecePosition.Split(',')[0]);
+            int column = Int32.Parse(currentPiecePosition.Split(',')[1]);
+
+            board[row, column].Piece = pieceName;
+
+            string possibleActions = PossibleMovesFromCurrentPosition(row, column);
+
+            return possibleActions;
         }
 
         public void MovePiece(string pieceName, int newRow, int newColumn)
