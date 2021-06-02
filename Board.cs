@@ -349,7 +349,7 @@ namespace Checkers
             return (possibleJumps == "") ? "" : possibleJumps;
         }
 
-        public string WhatPossibleJumpsCanBeMadeByGivenPiece(string pieceName)
+        public string WhatPossibleJumpsCanBeMadeByGivenManPiece(string pieceName)
         {
             if (!piecePositionsCheatSheet.Keys.Contains<string>(pieceName.ToUpper()))
                 return "Invalid piece";
@@ -368,8 +368,18 @@ namespace Checkers
             if (IsPositionOutOfBounds(row, column))
                 return "";
 
+            string possibleJumps;
+
+            char pieceRank = board[row, column].Piece[0];
             char pieceColor = board[row, column].Piece[1];
-            string possibleJumps = TryJumpingWithAManRankPiece(pieceColor, row, column);
+            if (pieceRank == 'M')
+            {
+                possibleJumps = TryJumpingWithAManRankPiece(pieceColor, row, column);
+            } else
+            {
+                List<string> slotsAlreadyVisited = new List<string>();
+                possibleJumps = TryJumpingWithAKingRankPiece(pieceColor, row, column, slotsAlreadyVisited);
+            }
 
             return (possibleJumps == "") ? "NO JUMPS;" : possibleJumps;
         }
@@ -414,6 +424,34 @@ namespace Checkers
             string possibleActions = PossibleMovesFromCurrentPosition(row, column);
 
             return possibleActions;
+        }
+
+        public string WhatPossibleJumpsCanBeMadeByGivenKingPiece(string pieceName)
+        {
+            if (!piecePositionsCheatSheet.Keys.Contains<string>(pieceName.ToUpper()))
+                return "Invalid piece";
+
+            #region Only for testing movement with kning pieces without playing a full game
+            //string value = piecePositionsCheatSheet[pieceName];
+            //piecePositionsCheatSheet.Remove(pieceName);
+            //pieceName = "K" + pieceName.Substring(1);
+            //piecePositionsCheatSheet.Add(pieceName, value);
+            #endregion
+
+            if (!pieceName.ToUpper().Contains('K'))
+                return "This piece is not a King piece";
+
+            string currentPiecePosition = piecePositionsCheatSheet[pieceName.ToUpper()];
+            int row = Int32.Parse(currentPiecePosition.Split(',')[0]);
+            int column = Int32.Parse(currentPiecePosition.Split(',')[1]);
+
+            #region Only for testing movement with kning pieces without playing a full game
+            //board[row, column].Piece = pieceName;
+            #endregion
+
+            string possibleJumps = PossibleJumpsFromCurrentPosition(row, column);
+
+            return possibleJumps;
         }
 
         public void MovePiece(string pieceName, int newRow, int newColumn)
